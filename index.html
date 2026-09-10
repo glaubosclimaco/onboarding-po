@@ -32,39 +32,7 @@
     --serif:"Source Serif 4", ui-serif, Georgia, "Times New Roman", serif;
     --mono:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   }
-  :root:not([data-theme="light"]){ color-scheme:light; }
-  @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]){
-      color-scheme:dark;
-      --paper:#0C0C0C;
-      --surface:#111111;
-      --surface-2:#161616;
-      --ink:#EDEDEB;
-      --ink-soft:#B0B0AD;
-      --ink-faint:#8A8A87;
-      --rule:#2B2B2B;
-      --rule-soft:#1F1F1F;
-      --rule-strong:#EDEDEB;
-      --accent:#E14B52;
-      --accent-ink:#EF6A70;
-      --accent-wash:#1F1010;
-    }
-  }
-  :root[data-theme="dark"]{
-    color-scheme:dark;
-    --paper:#0C0C0C;
-    --surface:#111111;
-    --surface-2:#161616;
-    --ink:#EDEDEB;
-    --ink-soft:#B0B0AD;
-    --ink-faint:#8A8A87;
-    --rule:#2B2B2B;
-    --rule-soft:#1F1F1F;
-    --rule-strong:#EDEDEB;
-    --accent:#E14B52;
-    --accent-ink:#EF6A70;
-    --accent-wash:#1F1010;
-  }
+  :root{ color-scheme:light; }
 
   *{box-sizing:border-box}
   body{
