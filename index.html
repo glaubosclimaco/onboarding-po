@@ -1,0 +1,984 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Trilha intensiva de quatro semanas em Pesquisa Operacional e Programacao Linear para alunos de iniciacao cientifica. Laboratorio MODAL, UFMA.">
+<style>
+  html{color-scheme:light}
+  body{margin:0}
+  img{max-width:100%}
+  [hidden]{display:none!important}
+</style>
+<title>Trilha de Otimização MODAL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Source+Sans+3:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --paper:#FFFFFF;
+    --surface:#FFFFFF;
+    --surface-2:#F7F7F6;
+    --ink:#121212;
+    --ink-soft:#484848;
+    --ink-faint:#7C7C7C;
+    --rule:#DEDEDC;
+    --rule-soft:#ECECEA;
+    --rule-strong:#121212;
+    --accent:#B0141E;
+    --accent-ink:#96111A;
+    --accent-wash:#FBF0F0;
+    --sans:"Source Sans 3", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --serif:"Source Serif 4", ui-serif, Georgia, "Times New Roman", serif;
+    --mono:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  :root:not([data-theme="light"]){ color-scheme:light; }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      color-scheme:dark;
+      --paper:#0C0C0C;
+      --surface:#111111;
+      --surface-2:#161616;
+      --ink:#EDEDEB;
+      --ink-soft:#B0B0AD;
+      --ink-faint:#8A8A87;
+      --rule:#2B2B2B;
+      --rule-soft:#1F1F1F;
+      --rule-strong:#EDEDEB;
+      --accent:#E14B52;
+      --accent-ink:#EF6A70;
+      --accent-wash:#1F1010;
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme:dark;
+    --paper:#0C0C0C;
+    --surface:#111111;
+    --surface-2:#161616;
+    --ink:#EDEDEB;
+    --ink-soft:#B0B0AD;
+    --ink-faint:#8A8A87;
+    --rule:#2B2B2B;
+    --rule-soft:#1F1F1F;
+    --rule-strong:#EDEDEB;
+    --accent:#E14B52;
+    --accent-ink:#EF6A70;
+    --accent-wash:#1F1010;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:16.5px;
+    line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--accent-ink);text-underline-offset:3px;text-decoration-thickness:.6px}
+  a:hover{color:var(--ink)}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:1px}
+  h1,h2,h3,h4{font-family:var(--serif);text-wrap:balance;margin:0;line-height:1.18}
+  p{margin:0}
+  ul,ol{margin:0;padding-left:1.15em}
+  code,kbd{font-family:var(--mono);font-size:.86em}
+  em{font-style:italic}
+
+  .wrap{max-width:1060px;margin:0 auto;padding-inline:22px}
+  .rail{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;
+    color:var(--ink-faint);
+  }
+
+  /* barra fixa */
+  .topbar{
+    position:sticky;top:0;z-index:40;
+    background:var(--paper);
+    border-bottom:1px solid var(--rule);
+  }
+  .topbar-in{display:flex;align-items:center;gap:18px;padding-block:10px}
+  .brand{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;
+    color:var(--ink);white-space:nowrap;
+  }
+  .brand b{color:var(--accent);font-weight:500}
+  .navlinks{display:flex;gap:1px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+  .navlinks::-webkit-scrollbar{display:none}
+  .navlinks a{
+    font-size:13px;font-weight:500;color:var(--ink-soft);text-decoration:none;
+    padding:4px 9px;white-space:nowrap;border-bottom:2px solid transparent;
+  }
+  .navlinks a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .prog{display:flex;align-items:center;gap:8px;white-space:nowrap}
+  .prog-track{width:64px;height:3px;background:var(--rule);overflow:hidden}
+  .prog-fill{height:100%;width:0%;background:var(--accent);transition:width .35s ease}
+  .prog-num{font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);font-variant-numeric:tabular-nums}
+
+  /* abertura */
+  .hero{border-bottom:3px double var(--rule-strong)}
+  .hero-in{
+    display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);
+    gap:52px;align-items:start;padding-block:60px 50px;
+  }
+  .eyebrow{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--accent);padding-bottom:12px;margin-bottom:20px;
+    border-bottom:1px solid var(--rule);
+  }
+  h1{font-size:clamp(36px,5.4vw,54px);font-weight:700;letter-spacing:-.018em}
+  h1 em{font-weight:400;color:var(--accent)}
+  .lede{margin-top:20px;font-family:var(--serif);font-size:19px;line-height:1.55;color:var(--ink-soft);max-width:52ch}
+  .facts{
+    display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:0;margin-top:32px;border-top:1px solid var(--rule);
+  }
+  .fact{
+    padding:11px 0;border-bottom:1px solid var(--rule);
+    font-size:13.5px;color:var(--ink-faint);
+  }
+  .fact:nth-child(even){padding-left:18px;border-left:1px solid var(--rule)}
+  .fact b{
+    display:block;font-family:var(--serif);font-size:20px;font-weight:600;
+    color:var(--ink);line-height:1.15;margin-bottom:1px;
+  }
+
+  figure.plot{margin:0}
+  figure.plot svg{display:block;width:100%;height:auto;max-width:100%;border:1px solid var(--rule);background:var(--surface)}
+  figure.plot figcaption{
+    margin-top:12px;font-size:13.5px;line-height:1.5;color:var(--ink-soft);
+    font-family:var(--serif);
+  }
+  figure.plot figcaption b{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent);font-weight:500;
+  }
+  .ax{stroke:var(--ink);stroke-width:1}
+  .cons{stroke:var(--ink-faint);stroke-width:1;fill:none}
+  .region{fill:var(--accent);fill-opacity:.10;stroke:var(--accent);stroke-width:1.3}
+  .iso{stroke:var(--ink);stroke-width:1;stroke-dasharray:4 3.5;fill:none}
+  .vtx{fill:var(--surface);stroke:var(--accent);stroke-width:1.3}
+  .opt{fill:var(--accent);stroke:var(--surface);stroke-width:1.6}
+  .tick{fill:var(--ink-faint);font-family:var(--mono);font-size:8px}
+  .glab{fill:var(--ink);font-family:var(--serif);font-size:9.5px;font-style:italic}
+  .glab-a{fill:var(--ink-faint);font-family:var(--mono);font-size:8px}
+  .glab-s{fill:var(--accent);font-family:var(--mono);font-size:8.5px;font-weight:500}
+
+  figure.inlinefig{margin:18px 0 0}
+  figure.inlinefig svg{display:block;width:100%;height:auto;max-width:100%;border:1px solid var(--rule);background:var(--surface)}
+  figure.inlinefig figcaption{
+    margin-top:9px;font-family:var(--serif);font-size:13px;line-height:1.45;color:var(--ink-soft);
+  }
+  figure.inlinefig figcaption b{
+    font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent);font-weight:500;
+  }
+  .walk{stroke:var(--accent);stroke-width:1.6;fill:none}
+  .glab-v{fill:var(--ink-soft);font-family:var(--mono);font-size:8px}
+
+  /* seções */
+  section{padding-block:58px;border-bottom:1px solid var(--rule)}
+  .sec-head{margin-bottom:34px;max-width:62ch}
+  .sec-kicker{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:10px;
+  }
+  h2{font-size:clamp(25px,3.6vw,34px);font-weight:600;letter-spacing:-.012em}
+  .sec-head p{margin-top:12px;color:var(--ink-soft);font-family:var(--serif);font-size:17.5px;line-height:1.55}
+
+  /* preparação */
+  .setup{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:44px;align-items:start}
+  .steps{display:flex;flex-direction:column}
+  .step{display:flex;gap:16px;align-items:flex-start;padding-block:15px;border-top:1px solid var(--rule)}
+  .step:last-child{border-bottom:1px solid var(--rule)}
+  .step-n{
+    flex:0 0 auto;font-family:var(--serif);font-size:19px;font-weight:600;
+    color:var(--accent);line-height:1.25;width:18px;
+  }
+  .step h4{font-family:var(--sans);font-size:15.5px;font-weight:600}
+  .step p{font-size:15px;color:var(--ink-soft);margin-top:3px}
+
+  pre{
+    margin:0;background:var(--surface-2);border:1px solid var(--rule);
+    border-left:2px solid var(--accent);
+    padding:16px 18px;overflow-x:auto;font-family:var(--mono);font-size:12.6px;line-height:1.75;
+    color:var(--ink);
+  }
+  pre .c{color:var(--ink-faint);font-style:italic}
+  pre .k{color:var(--accent);font-weight:500}
+  pre .s{color:var(--ink-soft)}
+  .code-label{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;
+    color:var(--ink-faint);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--rule);
+  }
+
+  /* semanas */
+  .weeks{display:flex;flex-direction:column;gap:0}
+  .week{border-top:2px solid var(--rule-strong);padding-top:22px;padding-bottom:38px}
+  .week + .week{margin-top:8px}
+  .week-top{display:flex;gap:18px;align-items:baseline;flex-wrap:wrap;margin-bottom:10px}
+  .week-n{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--accent);
+  }
+  .week-top h3{font-size:24px;font-weight:600;flex:1 1 280px;min-width:0;letter-spacing:-.01em}
+  .week-hours{font-family:var(--mono);font-size:11px;color:var(--ink-faint);white-space:nowrap}
+  .week-goal{
+    font-family:var(--serif);font-size:17px;line-height:1.5;color:var(--ink-soft);
+    max-width:70ch;padding-bottom:22px;border-bottom:1px solid var(--rule);
+  }
+  .week-goal b{color:var(--ink);font-weight:600;font-family:var(--sans);font-size:14px;
+    text-transform:uppercase;letter-spacing:.08em;margin-right:6px}
+  .week-body{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.28fr);gap:0}
+  .col{padding:22px 0}
+  .col + .col{border-left:1px solid var(--rule);padding-left:34px}
+  .col:first-child{padding-right:34px}
+  .col-title{
+    font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--ink-faint);margin-bottom:14px;
+  }
+  .terms{display:flex;flex-wrap:wrap;gap:5px}
+  .term{
+    font-size:12.5px;border:1px solid var(--rule);
+    padding:2px 8px;color:var(--ink-soft);background:var(--surface);
+  }
+  .note{font-size:14.5px;color:var(--ink-soft);margin-top:18px;line-height:1.55;
+    font-family:var(--serif);border-left:2px solid var(--rule);padding-left:14px}
+  .note b{color:var(--ink);font-weight:600}
+
+  .res{list-style:none;padding:0;display:flex;flex-direction:column;gap:0}
+  .res li{display:flex;gap:14px;align-items:baseline;padding-block:11px;border-top:1px solid var(--rule-soft)}
+  .res li:first-child{border-top:none;padding-top:0}
+  .kind{
+    flex:0 0 auto;width:72px;padding-right:12px;
+    font-family:var(--mono);font-size:9px;letter-spacing:.07em;
+    text-transform:uppercase;color:var(--ink-faint);
+    overflow-wrap:anywhere;
+  }
+  .kind.v{color:var(--accent)}
+  .res a{font-weight:500;font-size:15px}
+  .res span{display:block;font-size:13.5px;color:var(--ink-faint);line-height:1.45;margin-top:1px}
+
+  .tasks{list-style:none;padding:0;display:flex;flex-direction:column;gap:10px;margin-top:2px}
+  .tasks li{display:flex;gap:11px;align-items:flex-start;font-size:15px;color:var(--ink-soft)}
+  .tasks input{flex:0 0 auto;margin-top:4px;width:14px;height:14px;accent-color:var(--accent);cursor:pointer}
+  .tasks label{cursor:pointer}
+  .tasks input:checked + label{color:var(--ink-faint);text-decoration:line-through;text-decoration-color:var(--accent)}
+
+  .deliver{
+    margin-top:26px;padding:16px 20px;background:var(--accent-wash);
+    border-top:2px solid var(--accent);
+    font-family:var(--serif);font-size:16px;line-height:1.5;color:var(--ink);max-width:78ch;
+  }
+  .deliver b{
+    font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--accent);display:block;margin-bottom:5px;font-weight:500;
+  }
+
+  /* prateleiras */
+  .shelf{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:38px}
+  .shelfcard{border-top:2px solid var(--rule-strong);padding-top:16px}
+  .shelfcard h4{font-size:18px;font-weight:600;margin-bottom:3px}
+  .shelfcard > p{font-size:13.5px;color:var(--ink-faint);margin-bottom:16px}
+
+  /* glossário (estilo booktabs) */
+  .tablewrap{overflow-x:auto}
+  table{border-collapse:collapse;width:100%;min-width:600px;font-size:15px}
+  th,td{text-align:left;padding:9px 20px 9px 0;vertical-align:top}
+  thead th{
+    font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--ink-faint);font-weight:500;
+    border-top:2px solid var(--rule-strong);border-bottom:1px solid var(--rule-strong);
+    padding-block:10px;
+  }
+  tbody td{border-bottom:1px solid var(--rule-soft)}
+  tbody tr:last-child td{border-bottom:2px solid var(--rule-strong)}
+  td.pt{font-weight:600;white-space:nowrap;font-family:var(--serif);font-size:16px}
+  td.en{font-family:var(--mono);font-size:12.5px;color:var(--accent-ink);white-space:nowrap}
+  td.obs{color:var(--ink-soft);font-size:14.5px;font-family:var(--serif)}
+
+  /* erros / reunião */
+  .traps{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:0 38px}
+  .trap{padding-block:18px;border-top:1px solid var(--rule)}
+  .trap h4{font-family:var(--sans);font-size:15px;font-weight:600;margin-bottom:5px}
+  .trap h4 i{font-style:normal;color:var(--accent);font-family:var(--mono);font-size:11px;margin-right:7px}
+  .trap p{font-size:14.5px;color:var(--ink-soft)}
+  .trap p code{background:var(--surface-2);padding:1px 4px;border:1px solid var(--rule-soft)}
+
+  /* depois */
+  .after{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:0 38px}
+  .after > div{padding-block:18px;border-top:1px solid var(--rule)}
+  .after > div.next{
+    grid-column:1 / -1;border-top:2px solid var(--accent);
+    background:var(--accent-wash);padding:20px 22px;
+  }
+  .after > div.next h4{color:var(--accent)}
+  .after > div.next p{max-width:78ch}
+  .after h4{font-size:17px;font-weight:600;margin-bottom:6px}
+  .after p{font-size:14.5px;color:var(--ink-soft)}
+
+  footer{padding-block:38px 52px;color:var(--ink-faint);font-size:14px}
+  footer p + p{margin-top:5px}
+  footer .biblio{
+    font-size:14px;line-height:1.65;margin-top:20px;max-width:74ch;
+    font-family:var(--serif);color:var(--ink-soft);
+    border-top:1px solid var(--rule);padding-top:16px;
+  }
+  footer .biblio b{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:6px;font-weight:500}
+
+  @media (max-width:860px){
+    .hero-in{grid-template-columns:1fr;gap:34px;padding-block:42px 36px}
+    .setup{grid-template-columns:1fr;gap:32px}
+    .week-body{grid-template-columns:1fr}
+    .col:first-child{padding-right:0}
+    .col + .col{border-left:none;border-top:1px solid var(--rule);padding-left:0}
+    .brand{display:none}
+    .navlinks{margin-left:0}
+  }
+  @media (max-width:480px){
+    .facts{grid-template-columns:1fr}
+    .fact:nth-child(even){padding-left:0;border-left:none}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;animation:none !important}
+  }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="wrap topbar-in">
+    <div class="brand">MODAL · UFMA · <b>Iniciação Científica</b></div>
+    <nav class="navlinks">
+      <a href="#setup">Preparação</a>
+      <a href="#s1">Semana 1</a>
+      <a href="#s2">Semana 2</a>
+      <a href="#s3">Semana 3</a>
+      <a href="#s4">Semana 4</a>
+      <a href="#recursos">Recursos</a>
+      <a href="#glossario">Glossário</a>
+    </nav>
+    <div class="prog" title="Seu progresso nas tarefas">
+      <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+      <span class="prog-num" id="progNum">0/0</span>
+    </div>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap hero-in">
+    <div>
+      <div class="eyebrow">Trilha de entrada · quatro semanas</div>
+      <h1>Pesquisa Operacional e <em>Programação Linear</em> do zero</h1>
+      <p class="lede">Um roteiro intensivo para quem nunca viu programação linear e vai começar a pesquisar
+        otimização no MODAL. Ao final da quarta semana você formula um problema real em notação matemática,
+        resolve no computador e lê um artigo científico da área sem se perder no vocabulário.</p>
+      <div class="facts">
+        <div class="fact"><b>4 semanas</b>≈ 8 horas por semana</div>
+        <div class="fact"><b>Álgebra do ensino médio</b>único pré-requisito</div>
+        <div class="fact"><b>Python + PuLP</b>ferramentas da trilha</div>
+        <div class="fact"><b>Português</b>todo o material indicado</div>
+      </div>
+    </div>
+
+    <figure class="plot">
+      <svg viewBox="0 0 300 244" role="img" aria-label="Região viável de um problema de programação linear com duas variáveis, com o vértice ótimo destacado em (2, 6) e valor ótimo 36.">
+        <polygon class="region" points="34,210 203.3,210 203.3,135.8 118.7,61.5 34,61.5"></polygon>
+        <line class="cons" x1="203.3" y1="212" x2="203.3" y2="26"></line>
+        <line class="cons" x1="32" y1="61.5" x2="272" y2="61.5"></line>
+        <line class="cons" x1="62.2" y1="12" x2="288" y2="210"></line>
+        <line class="iso" x1="34" y1="31.8" x2="288" y2="120.9"></line>
+        <line class="ax" x1="34" y1="210" x2="292" y2="210"></line>
+        <line class="ax" x1="34" y1="210" x2="34" y2="14"></line>
+        <text class="tick" x="118.7" y="221" text-anchor="middle">2</text>
+        <text class="tick" x="203.3" y="221" text-anchor="middle">4</text>
+        <text class="tick" x="288" y="221" text-anchor="middle">6</text>
+        <text class="tick" x="28" y="163" text-anchor="end">2</text>
+        <text class="tick" x="28" y="114" text-anchor="end">4</text>
+        <text class="tick" x="28" y="64.5" text-anchor="end">6</text>
+        <circle class="vtx" cx="34" cy="210" r="3"></circle>
+        <circle class="vtx" cx="203.3" cy="210" r="3"></circle>
+        <circle class="vtx" cx="203.3" cy="135.8" r="3"></circle>
+        <circle class="vtx" cx="34" cy="61.5" r="3"></circle>
+        <circle class="opt" cx="118.7" cy="61.5" r="4.6"></circle>
+        <text class="glab" x="292" y="233" text-anchor="end">x₁ (mesas)</text>
+        <text class="glab" x="39" y="21">x₂ (armários)</text>
+        <text class="glab-a" x="208" y="40">x₁ ≤ 4</text>
+        <text class="glab-a" x="216" y="75">2x₂ ≤ 12</text>
+        <text class="glab-a" x="238" y="168" text-anchor="middle">3x₁ + 2x₂ ≤ 18</text>
+        <text class="glab-s" x="125" y="52">ótimo (2, 6) · z* = 36</text>
+      </svg>
+      <figcaption><b>Figura 1.</b> O vocabulário da Semana 1 em uma imagem: as retas são as restrições, a
+        área sombreada é a região viável, e a linha tracejada é o lucro <code>z = 3x₁ + 5x₂</code> deslizando
+        até o último ponto que ainda toca a região. Esse ponto é sempre um vértice. A figura serve para
+        enxergar os conceitos, não para resolver nada no papel.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<main>
+  <section id="setup">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-kicker">Antes da Semana 1 · reserve uma tarde</div>
+        <h2>Preparação do ambiente</h2>
+        <p>Nada aqui é difícil, mas resolver isso agora evita perder a primeira semana lutando com instalação.
+          Se der qualquer problema, use o Google Colab e siga em frente. Instalar direito na sua máquina
+          pode esperar.</p>
+      </div>
+      <div class="setup">
+        <div class="steps">
+          <div class="step">
+            <div class="step-n">1</div>
+            <div>
+              <h4>Escolha onde vai programar</h4>
+              <p>Caminho rápido: <a href="https://colab.research.google.com" target="_blank" rel="noopener">Google Colab</a>,
+                que roda no navegador sem instalar nada. Caminho definitivo: Python 3 + VS Code na sua máquina.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-n">2</div>
+            <div>
+              <h4>Instale as bibliotecas</h4>
+              <p>PuLP resolve toda a trilha sozinho: modelos contínuos e inteiros, com o solver CBC já
+                embutido. As outras bibliotecas são opcionais, para quando os modelos crescerem.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-n">3</div>
+            <div>
+              <h4>Crie o caderno de bordo</h4>
+              <p>Um documento único, com data em cada entrada: o que você estudou, o que travou, que dúvida
+                levar para a reunião. É desse caderno que sai o relatório final da IC. Não confie na memória.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-n">4</div>
+            <div>
+              <h4>Organize a pasta do projeto</h4>
+              <p>Uma pasta por semana, com os notebooks e os PDFs que você leu. Se souber usar Git, use desde
+                já; se não souber, aprenda o básico na Semana&nbsp;4.</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="code-label">Teste de fumaça · se isto rodar, está tudo certo</div>
+          <pre><span class="c"># no terminal (ou numa célula do Colab com ! na frente)</span>
+pip install pulp pandas matplotlib     # ortools é opcional, só depois
+
+<span class="c"># salve como teste.py e execute</span>
+<span class="k">from</span> pulp <span class="k">import</span> LpProblem, LpVariable, LpMaximize, value, LpStatus
+
+m  = LpProblem(<span class="s">"marcenaria"</span>, LpMaximize)
+x1 = LpVariable(<span class="s">"mesas"</span>,    lowBound=0)
+x2 = LpVariable(<span class="s">"armarios"</span>, lowBound=0)
+
+m += 3*x1 + 5*x2                    <span class="c"># lucro a maximizar</span>
+m +=      x1        &lt;= 4,  <span class="s">"serra"</span>
+m +=            2*x2 &lt;= 12, <span class="s">"lixadeira"</span>
+m += 3*x1 + 2*x2 &lt;= 18, <span class="s">"montagem"</span>
+
+m.solve()
+print(LpStatus[m.status], value(m.objective))   <span class="c"># Optimal 36.0</span>
+<span class="k">for</span> v <span class="k">in</span> m.variables():
+    print(v.name, v.varValue)                   <span class="c"># mesas 2.0 · armarios 6.0</span></pre>
+          <p class="note">Esse é exatamente o problema desenhado na Figura 1. Guarde o arquivo: ele vira a
+            base de tudo que você escreve nas próximas quatro semanas.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="semanas">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-kicker">O roteiro</div>
+        <h2>Quatro semanas, quatro entregas</h2>
+        <p>Cada semana tem uma meta única, um conjunto pequeno de conceitos, material em português para
+          assistir, leitura de apoio e uma entrega concreta para discutir na reunião de orientação. A regra
+          é simples: <b>os vídeos são para assistir, os textos são opcionais</b>, ali para quando um assunto
+          não fechar ou você quiser ir além. As tarefas são
+          curtas de propósito: se alguma travar por mais de meia hora, pare, anote a dúvida no caderno de
+          bordo e leve para a reunião. Ficar preso sozinho não faz parte do combinado. Marque o que terminar,
+          que o navegador guarda seu progresso neste dispositivo.</p>
+      </div>
+
+      <div class="weeks">
+
+        <!-- SEMANA 1 -->
+        <article class="week" id="s1">
+          <div class="week-top">
+            <span class="week-n">Semana 1</span>
+            <h3>Do problema em português ao modelo matemático</h3>
+            <span class="week-hours">≈ 8 h</span>
+          </div>
+          <p class="week-goal"><b>Meta</b> ler um problema descrito em texto e escrevê-lo como
+            <em>maximizar/minimizar</em> uma função linear sujeita a restrições lineares, com notação
+            organizada e sem ambiguidade.</p>
+          <div class="week-body">
+            <div class="col">
+              <div class="col-title">Conceitos</div>
+              <div class="terms">
+                <span class="term">variável de decisão</span>
+                <span class="term">função objetivo</span>
+                <span class="term">restrição</span>
+                <span class="term">parâmetro (dado)</span>
+                <span class="term">região viável</span>
+                <span class="term">vértice</span>
+                <span class="term">solução ótima</span>
+                <span class="term">inviável</span>
+                <span class="term">ilimitado</span>
+              </div>
+              <p class="note">A pergunta que resolve 90% dos travamentos: <b>o que eu posso decidir?</b>
+                Aquilo que você escolhe é variável; aquilo que o problema te dá pronto é dado. Confundir os
+                dois é o erro nº 1 de quem está começando.</p>
+            </div>
+            <div class="col">
+              <div class="col-title">Assista · obrigatório</div>
+              <ul class="res">
+                <li><span class="kind v">Vídeo</span><div><a href="https://www.youtube.com/playlist?list=PLH9knZH6lcgoWG6Q2zn3ilb3mFjJoyvTi" target="_blank" rel="noopener">UNIVESP: Pesquisa Operacional I, aulas 1 a 6</a>
+                  <span>Introdução e modelagem, do zero. São as seis primeiras da playlist, cerca de duas horas no total.</span></div></li>
+                <li><span class="kind v">Vídeo</span><div><a href="https://www.youtube.com/watch?v=4AbjF8Lehe8" target="_blank" rel="noopener">Modelagem algébrica, partes 1 e 2</a>
+                  <span>Duas aulas curtas focadas só em traduzir texto em equações. <a href="https://www.youtube.com/watch?v=aznvb3WEpec" target="_blank" rel="noopener">Parte 2 aqui</a>.</span></div></li>
+              </ul>
+              <div class="col-title" style="margin-top:26px">Material de apoio · leitura opcional</div>
+              <ul class="res">
+                <li><span class="kind ">Texto</span><div><a href="https://alexandrechecoli.github.io/4-prog-linear/prog-linear.html" target="_blank" rel="noopener">Programação Linear na UFPR (Alexandre Checoli)</a>
+                  <span>Slides e listas com gabarito, para quem quiser mais exemplos de modelagem.</span></div></li>
+                <li><span class="kind ">Texto</span><div><a href="https://github.com/iagoac/dce692" target="_blank" rel="noopener">DCE692: Pesquisa Operacional (UNIFAL)</a>
+                  <span>Repositório aberto com slides em português, listas e videoaulas de apoio.</span></div></li>
+                <li><span class="kind ">Ferram.</span><div><a href="https://www.geogebra.org/calculator" target="_blank" rel="noopener">GeoGebra</a>
+                  <span>Você vai usar na última tarefa da semana. Digite as restrições e a região viável aparece sozinha.</span></div></li>
+              </ul>
+              <div class="col-title" style="margin-top:26px">Faça</div>
+              <ul class="tasks">
+                <li><input type="checkbox" id="t1a"><label for="t1a">Escolha <b>um</b> problema clássico pequeno (mix de produção, dieta, mistura, transporte ou alocação de horas) e liste só as variáveis de decisão. Nada além disso ainda.</label></li>
+                <li><input type="checkbox" id="t1b"><label for="t1b">Complete esse primeiro modelo: dicionário de notação (conjuntos, parâmetros, variáveis), função objetivo e restrições numeradas.</label></li>
+                <li><input type="checkbox" id="t1c"><label for="t1c">Repita o mesmo roteiro com um probleminha do seu dia a dia. Pode ser bem simples: a graça está em decidir o que é decisão.</label></li>
+                <li><input type="checkbox" id="t1d"><label for="t1d">Digite as restrições de um dos dois no <a href="https://www.geogebra.org/calculator" target="_blank" rel="noopener">GeoGebra</a>, veja a região viável aparecer e salve a imagem.</label></li>
+                <li><input type="checkbox" id="t1e"><label for="t1e"><b>Fecha a entrega:</b> junte os dois modelos e a figura num único documento.</label></li>
+              </ul>
+            </div>
+          </div>
+          <div class="deliver"><b>Entrega da semana</b>
+            Um documento com os 2 modelos formulados (o clássico que você escolheu e o do seu dia a dia),
+            cada um com dicionário de notação (conjuntos, parâmetros, variáveis), função objetivo e
+            restrições numeradas, mais a figura da região viável de um deles.</div>
+        </article>
+
+        <!-- SEMANA 2 -->
+        <article class="week" id="s2">
+          <div class="week-top">
+            <span class="week-n">Semana 2</span>
+            <h3>Do papel para o computador: resolver e interpretar</h3>
+            <span class="week-hours">≈ 8 h</span>
+          </div>
+          <p class="week-goal"><b>Meta</b> transformar os modelos da Semana 1 em código que resolve, ler a
+            solução com segurança e saber dizer se ela faz sentido no problema original.</p>
+          <div class="week-body">
+            <div class="col">
+              <div class="col-title">Conceitos</div>
+              <div class="terms">
+                <span class="term">status da solução</span>
+                <span class="term">restrição no limite</span>
+                <span class="term">gargalo</span>
+                <span class="term">validação do modelo</span>
+                <span class="term">dados vs. modelo</span>
+                <span class="term">cenário</span>
+              </div>
+              <p class="note">O algoritmo que o solver usa por dentro fica de fora desta trilha, de
+                propósito. Aqui ele é <b>caixa-preta</b>: você aprende a alimentá-lo bem e a interpretar o
+                que ele responde. Abrir a caixa é assunto de uma etapa posterior, quando já houver um
+                problema real motivando a pergunta.</p>
+              <figure class="inlinefig">
+                <svg viewBox="0 0 300 200" role="img" aria-label="A mesma região viável, com setas ligando os vértices na ordem em que um solver os visita, e o valor da função objetivo em cada um: 0, 12, 27 e 36 no vértice ótimo.">
+                  <defs>
+                    <marker id="seta" viewBox="0 0 8 8" refX="6.5" refY="4" markerWidth="5.5" markerHeight="5.5" orient="auto">
+                      <path d="M0,0.8 L7.5,4 L0,7.2 z" fill="currentColor"></path>
+                    </marker>
+                  </defs>
+                  <polygon class="region" points="26,178 202,178 202,115 114,52 26,52"></polygon>
+                  <line class="ax" x1="26" y1="178" x2="292" y2="178"></line>
+                  <line class="ax" x1="26" y1="178" x2="26" y2="14"></line>
+                  <g class="walk" color="var(--accent)" marker-end="url(#seta)">
+                    <line x1="34" y1="178" x2="194" y2="178"></line>
+                    <line x1="202" y1="170" x2="202" y2="123"></line>
+                    <line x1="196" y1="109" x2="121" y2="58"></line>
+                  </g>
+                  <circle class="vtx" cx="26" cy="178" r="3"></circle>
+                  <circle class="vtx" cx="202" cy="178" r="3"></circle>
+                  <circle class="vtx" cx="202" cy="115" r="3"></circle>
+                  <circle class="opt" cx="114" cy="52" r="4.6"></circle>
+                  <text class="glab-v" x="32" y="192">z = 0</text>
+                  <text class="glab-v" x="208" y="192">z = 12</text>
+                  <text class="glab-v" x="210" y="112">z = 27</text>
+                  <text class="glab-s" x="118" y="44">z = 36 · ótimo</text>
+                  <text class="glab" x="292" y="196" text-anchor="end">x₁</text>
+                  <text class="glab" x="31" y="22">x₂</text>
+                </svg>
+                <figcaption><b>Figura 2.</b> O que o solver faz, em uma imagem: pula de vértice em vértice,
+                  melhorando o valor a cada passo, até nenhum vizinho melhorar. Como ele escolhe cada passo
+                  é justamente o que fica dentro da caixa-preta.</figcaption>
+              </figure>
+            </div>
+            <div class="col">
+              <div class="col-title">Assista · obrigatório</div>
+              <ul class="res">
+                <li><span class="kind v">Vídeo</span><div><a href="https://www.youtube.com/watch?v=oYSZxjnOJb0" target="_blank" rel="noopener">PuLP: Python, simples e intuitivo</a>
+                  <span>Do modelo ao código, com a biblioteca que você vai usar no resto da trilha.</span></div></li>
+                <li><span class="kind v">Vídeo</span><div><a href="https://www.youtube.com/playlist?list=PLe82WKsecrpwg_R_KTZp6pIC1UylGPOYW" target="_blank" rel="noopener">Programação Linear: exercícios resolvidos</a>
+                  <span>Assista duas ou três resoluções, para ver como outra pessoa organiza o modelo antes de codificar.</span></div></li>
+              </ul>
+              <div class="col-title" style="margin-top:26px">Material de apoio · leitura opcional</div>
+              <ul class="res">
+                <li><span class="kind ">Texto</span><div><a href="https://ocamposfaria.medium.com/introdu%C3%A7%C3%A3o-%C3%A0-programa%C3%A7%C3%A3o-linear-com-pulp-2af268845ef1" target="_blank" rel="noopener">Introdução à Programação Linear com PuLP</a>
+                  <span>Tutorial escrito, em português. Há uma <a href="https://medium.com/@ieeecisunb/introdu%C3%A7%C3%A3o-%C3%A0-programa%C3%A7%C3%A3o-linear-com-pulp-aed918a8d241" target="_blank" rel="noopener">versão do IEEE CIS UnB</a> também.</span></div></li>
+                <li><span class="kind ">Consulta</span><div><a href="https://coin-or.github.io/pulp/" target="_blank" rel="noopener">Documentação do PuLP</a>
+                  <span>Para tirar dúvidas pontuais: <code>LpStatus</code>, <code>varValue</code>, <code>value(prob.objective)</code>.</span></div></li>
+                <li><span class="kind ">Texto</span><div><a href="https://github.com/iagoac/dce692" target="_blank" rel="noopener">DCE692: laboratório em Python (UNIFAL)</a>
+                  <span>Enunciados prontos, caso queira treinar além dos seus dois modelos.</span></div></li>
+              </ul>
+              <div class="col-title" style="margin-top:26px">Faça</div>
+              <ul class="tasks">
+                <li><input type="checkbox" id="t2a"><label for="t2a">Aquecimento: rode o exemplo da marcenaria, confirme o <code>Optimal 36.0</code>, apague uma restrição e veja o <code>LpStatus</code> mudar.</label></li>
+                <li><input type="checkbox" id="t2b"><label for="t2b">Passe o primeiro modelo da Semana 1 para o PuLP aos poucos: variáveis, objetivo, e uma restrição de cada vez, rodando entre cada passo.</label></li>
+                <li><input type="checkbox" id="t2c"><label for="t2c">Faça o mesmo com o segundo modelo, que agora deve sair bem mais rápido.</label></li>
+                <li><input type="checkbox" id="t2d"><label for="t2d">Em cada modelo, anote ao lado de cada restrição quanto foi usado e quanto havia. As que ficaram no limite são os gargalos.</label></li>
+                <li><input type="checkbox" id="t2e"><label for="t2e">Rode cada modelo de novo mudando um parâmetro (uma capacidade, um preço) e anote o que mudou na solução.</label></li>
+                <li><input type="checkbox" id="t2f"><label for="t2f"><b>Fecha a entrega:</b> escreva no notebook, abaixo de cada modelo, o parágrafo com a decisão recomendada, os gargalos e o efeito da mudança.</label></li>
+              </ul>
+            </div>
+          </div>
+          <div class="deliver"><b>Entrega da semana</b>
+            Um notebook com os modelos da Semana 1 resolvidos em PuLP, cada um seguido de um parágrafo em
+            português: qual foi a decisão recomendada, quais recursos ficaram no limite, e o que mudou na
+            solução quando você alterou um parâmetro.</div>
+        </article>
+
+        <!-- SEMANA 3 -->
+        <article class="week" id="s3">
+          <div class="week-top">
+            <span class="week-n">Semana 3</span>
+            <h3>Decisões do tipo sim ou não: variáveis binárias</h3>
+            <span class="week-hours">≈ 8 h</span>
+          </div>
+          <p class="week-goal"><b>Meta</b> modelar escolhas discretas (abrir ou não abrir, atribuir ou não
+            atribuir) com variáveis binárias, sem trocar de ferramenta.</p>
+          <div class="week-body">
+            <div class="col">
+              <div class="col-title">Conceitos</div>
+              <div class="terms">
+                <span class="term">variável inteira</span>
+                <span class="term">variável binária</span>
+                <span class="term">restrição lógica</span>
+                <span class="term">big-M</span>
+                <span class="term">relaxação contínua</span>
+                <span class="term">mochila</span>
+                <span class="term">designação</span>
+              </div>
+              <p class="note">Nada de ferramenta nova: no PuLP, uma decisão sim ou não é só
+                <code>LpVariable("abre_base", cat="Binary")</code>, e o resto do modelo se escreve igual. O
+                que muda é o trabalho que o solver tem por dentro, e isso você sente no relógio.</p>
+              <p class="note">A descoberta mais importante da semana: <b>arredondar a solução contínua não
+                resolve</b>. O arredondamento costuma dar resposta inviável, ou viável mas pior que a ótima.
+                Vale ver isso acontecer com os seus próprios números.</p>
+            </div>
+            <div class="col">
+              <div class="col-title">Assista · obrigatório</div>
+              <ul class="res">
+                <li><span class="kind v">Vídeo</span><div><a href="https://www.youtube.com/watch?v=F3H-whgy-QQ" target="_blank" rel="noopener">Programação Inteira: variáveis inteiras e binárias</a>
+                  <span>A aula que introduz exatamente o assunto da semana, com exemplos de modelagem.</span></div></li>
+                <li><span class="kind v">Vídeo</span><div><a href="https://www.youtube.com/watch?v=FKFdCXNWJis" target="_blank" rel="noopener">Pesquisa Operacional II, aula 01: Programação Inteira</a>
+                  <span>Complementa a anterior e mostra por que decisões discretas mudam o problema.</span></div></li>
+              </ul>
+              <div class="col-title" style="margin-top:26px">Material de apoio · leitura opcional</div>
+              <ul class="res">
+                <li><span class="kind ">Consulta</span><div><a href="https://coin-or.github.io/pulp/technical/pulp.html#pulp.LpVariable" target="_blank" rel="noopener">PuLP: variáveis inteiras e binárias</a>
+                  <span>Continua tudo no PuLP: basta <code>cat="Integer"</code> ou <code>cat="Binary"</code> na declaração.</span></div></li>
+                <li><span class="kind ">Texto</span><div><a href="http://www.decom.ufop.br/marcone/Disciplinas/OtimizacaoCombinatoria/OtimizacaoCombinatoria.pdf" target="_blank" rel="noopener">Otimização Combinatória: notas de aula (UFOP)</a>
+                  <span>Notas do Prof. Marcone Souza. Se for abrir, veja só os capítulos de modelagem com binárias.</span></div></li>
+                <li><span class="kind ">Texto</span><div><a href="https://github.com/iagoac/dce692" target="_blank" rel="noopener">DCE692: exercícios de programação inteira</a>
+                  <span>Mais enunciados em português, para treinar depois das tarefas da semana.</span></div></li>
+              </ul>
+              <div class="col-title" style="margin-top:26px">Faça</div>
+              <ul class="tasks">
+                <li><input type="checkbox" id="t3a"><label for="t3a">Pegue uma mochila com 5 itens e escreva no papel, em português, qual é a decisão sim ou não de cada item.</label></li>
+                <li><input type="checkbox" id="t3b"><label for="t3b">Implemente essa mochila com <code>cat="Binary"</code>. Se travar, comece com 3 itens e cresça depois.</label></li>
+                <li><input type="checkbox" id="t3c"><label for="t3c">Rode a mesma mochila com variáveis contínuas, arredonde o resultado à mão e anote o que deu errado.</label></li>
+                <li><input type="checkbox" id="t3d"><label for="t3d">Implemente designação com 3 pessoas e 3 tarefas, um tamanho que você confere de cabeça.</label></li>
+                <li><input type="checkbox" id="t3e"><label for="t3e">Acrescente à designação uma restrição lógica: se a pessoa A ficar com certa tarefa, a B não pode ficar.</label></li>
+                <li><input type="checkbox" id="t3f"><label for="t3f"><b>Fecha a entrega:</b> escreva o parágrafo comparando a solução inteira da mochila com a contínua arredondada.</label></li>
+              </ul>
+            </div>
+          </div>
+          <div class="deliver"><b>Entrega da semana</b>
+            Mochila e designação implementadas com variáveis binárias, a designação já com uma restrição
+            lógica, mais o parágrafo comparando a solução inteira com a contínua arredondada.</div>
+        </article>
+
+        <!-- SEMANA 4 -->
+        <article class="week" id="s4">
+          <div class="week-top">
+            <span class="week-n">Semana 4</span>
+            <h3>Problemas clássicos e o limite do computador</h3>
+            <span class="week-hours">≈ 8 h</span>
+          </div>
+          <p class="week-goal"><b>Meta</b> reconhecer, num problema novo, a estrutura clássica que ele
+            esconde, e sentir na prática como o tempo de resolução cresce com o tamanho da instância.</p>
+          <div class="week-body">
+            <div class="col">
+              <div class="col-title">Conceitos</div>
+              <div class="terms">
+                <span class="term">cobertura de conjuntos</span>
+                <span class="term">localização de instalações</span>
+                <span class="term">roteamento</span>
+                <span class="term">instância</span>
+                <span class="term">NP-difícil</span>
+                <span class="term">tempo limite</span>
+                <span class="term">gap de otimalidade</span>
+              </div>
+              <p class="note">Os problemas do MODAL quase sempre caem aqui: alocar equipes a bases, escalar
+                turnos, decidir onde abrir uma instalação, sequenciar operações num porto. Aprender os
+                clássicos é aprender a enxergar o seu problema como uma variação de um deles.</p>
+              <p class="note">Quando o solver não termina, ele ainda entrega algo útil: a melhor solução que
+                achou e o <b>gap</b>, que diz o quanto ela ainda pode estar longe do ótimo. Saber ler isso é
+                metade do trabalho experimental.</p>
+            </div>
+            <div class="col">
+              <div class="col-title">Assista · obrigatório</div>
+              <ul class="res">
+                <li><span class="kind v">Vídeo</span><div><a href="https://www.youtube.com/playlist?list=PLH9knZH6lcgoWG6Q2zn3ilb3mFjJoyvTi" target="_blank" rel="noopener">UNIVESP: aulas de transporte e designação</a>
+                  <span>Na mesma playlist da Semana 1, agora nas aulas dos problemas clássicos em rede.</span></div></li>
+              </ul>
+              <div class="col-title" style="margin-top:26px">Material de apoio · leitura opcional</div>
+              <ul class="res">
+                <li><span class="kind ">Texto</span><div><a href="http://www.decom.ufop.br/marcone/Disciplinas/OtimizacaoCombinatoria/OtimizacaoCombinatoria.pdf" target="_blank" rel="noopener">Otimização Combinatória: os problemas clássicos (UFOP)</a>
+                  <span>Se quiser ir além, os capítulos de cobertura, localização e roteamento.</span></div></li>
+                <li><span class="kind ">Dados</span><div><a href="https://www.brunel.ac.uk/~mastjjb/jeb/info.html" target="_blank" rel="noopener">OR-Library</a>
+                  <span>Instâncias clássicas com ótimos publicados. Só se você chegar na tarefa opcional.</span></div></li>
+                <li><span class="kind ">Opcional</span><div><a href="https://developers.google.com/optimization/lp?hl=pt-br" target="_blank" rel="noopener">Guia do Google OR-Tools (em português)</a>
+                  <span>Fora da trilha, mas vale pelo módulo de roteamento, que o PuLP não tem. Há um <a href="https://sussumu-hida.medium.com/introdu%C3%A7%C3%A3o-ao-ortools-para-otimiza%C3%A7%C3%A3o-5c77098a0af5" target="_blank" rel="noopener">post introdutório em português</a>.</span></div></li>
+              </ul>
+              <div class="col-title" style="margin-top:26px">Faça</div>
+              <ul class="tasks">
+                <li><input type="checkbox" id="t4a"><label for="t4a">Implemente cobertura de conjuntos numa instância minúscula, que você resolve de cabeça, e veja se o solver concorda com você.</label></li>
+                <li><input type="checkbox" id="t4b"><label for="t4b">Implemente localização de instalações reaproveitando boa parte do que você acabou de escrever.</label></li>
+                <li><input type="checkbox" id="t4c"><label for="t4c">Rode os dois em instâncias que crescem (10, 50, 100) e vá preenchendo a tabela: n, tempo, valor.</label></li>
+                <li><input type="checkbox" id="t4d"><label for="t4d">Coloque um limite de tempo numa instância grande e anote o gap que aparecer quando ele não terminar.</label></li>
+                <li><input type="checkbox" id="t4e"><label for="t4e">Opcional, se sobrar tempo: abra uma instância da <a href="https://www.brunel.ac.uk/~mastjjb/jeb/info.html" target="_blank" rel="noopener">OR-Library</a> e compare o seu resultado com o ótimo publicado.</label></li>
+                <li><input type="checkbox" id="t4f"><label for="t4f"><b>Fecha a entrega:</b> escreva, abaixo da tabela, o parágrafo dizendo a partir de que tamanho o solver começou a demorar.</label></li>
+              </ul>
+            </div>
+          </div>
+          <div class="deliver"><b>Entrega da semana</b>
+            Os dois clássicos implementados e uma tabela simples de experimentos (n, tempo, valor, e o gap
+            quando o solver não terminar), com um parágrafo dizendo a partir de que tamanho ele começou a
+            demorar.</div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="erros">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-kicker">Diagnóstico rápido</div>
+        <h2>Oito erros que travam todo mundo no começo</h2>
+        <p>Quando o modelo não sai ou o solver devolve algo estranho, passe esta lista antes de pedir ajuda.
+          Em geral o problema está aqui.</p>
+      </div>
+      <div class="traps">
+        <div class="trap"><h4><i>01</i>Dado virou variável</h4><p>Se o número já está no enunciado, ele é parâmetro. Variável é só aquilo que você decide.</p></div>
+        <div class="trap"><h4><i>02</i>Restrição não é linear</h4><p>Multiplicar duas variáveis, dividir por variável ou usar <code>max()</code> dentro da restrição sai da programação linear.</p></div>
+        <div class="trap"><h4><i>03</i>Domínio esquecido</h4><p>Faltou <code>x ≥ 0</code>, ou a variável deveria ser inteira/binária e ficou contínua. Resultado: solução sem sentido físico.</p></div>
+        <div class="trap"><h4><i>04</i>Unidades misturadas</h4><p>R$/hora com R$/mês, tonelada com quilo. O modelo roda, o número mente.</p></div>
+        <div class="trap"><h4><i>05</i>Big-M exagerado</h4><p><code>M = 10⁹</code> deixa a relaxação inútil e o solver instável. Use o menor M que ainda é válido.</p></div>
+        <div class="trap"><h4><i>06</i>Somatório sem conjunto</h4><p>Todo índice precisa dizer onde vive: <code>∀ i ∈ I</code>. Índice solto no papel vira bug no código.</p></div>
+        <div class="trap"><h4><i>07</i>Modelo sem dicionário</h4><p>Sem listar conjuntos, parâmetros e variáveis antes das equações, nem você entende o que escreveu daqui a duas semanas.</p></div>
+        <div class="trap"><h4><i>08</i>Status ignorado</h4><p>Sempre confira <code>LpStatus</code>: <em>Optimal</em>, <em>Infeasible</em> e <em>Unbounded</em> exigem reações completamente diferentes.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="glossario">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-kicker">Português ↔ Inglês</div>
+        <h2>Glossário para sobreviver à literatura</h2>
+        <p>Cedo ou tarde você vai ler em inglês, não tem jeito: é onde está a maior parte da
+          produção da área. Estes termos cobrem quase todo o vocabulário de um artigo introdutório.</p>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Português</th><th>Inglês</th><th>O que é, em uma frase</th></tr></thead>
+          <tbody>
+            <tr><td class="pt">variável de decisão</td><td class="en">decision variable</td><td class="obs">O que você escolhe: quanto produzir, quem vai onde, abrir ou não.</td></tr>
+            <tr><td class="pt">função objetivo</td><td class="en">objective function</td><td class="obs">A conta que você quer maximizar ou minimizar.</td></tr>
+            <tr><td class="pt">restrição</td><td class="en">constraint</td><td class="obs">O limite da realidade: capacidade, demanda, orçamento, tempo.</td></tr>
+            <tr><td class="pt">região viável</td><td class="en">feasible region</td><td class="obs">Todas as decisões que respeitam simultaneamente as restrições.</td></tr>
+            <tr><td class="pt">solução ótima</td><td class="en">optimal solution</td><td class="obs">A melhor entre as viáveis; em PL, sempre num vértice.</td></tr>
+            <tr><td class="pt">inviável</td><td class="en">infeasible</td><td class="obs">Nenhuma decisão satisfaz tudo: suas restrições se contradizem.</td></tr>
+            <tr><td class="pt">ilimitado</td><td class="en">unbounded</td><td class="obs">Dá para melhorar para sempre, e quase sempre falta uma restrição.</td></tr>
+            <tr><td class="pt">relaxação linear</td><td class="en">LP relaxation</td><td class="obs">O modelo inteiro com as variáveis deixadas contínuas; dá um limitante rápido.</td></tr>
+            <tr><td class="pt">limitante</td><td class="en">bound</td><td class="obs">Um valor que o ótimo certamente não ultrapassa (ou não fica abaixo).</td></tr>
+            <tr><td class="pt">gap de otimalidade</td><td class="en">optimality gap</td><td class="obs">A distância entre a melhor solução achada e o melhor limitante conhecido.</td></tr>
+            <tr><td class="pt">programação inteira mista</td><td class="en">MILP</td><td class="obs">Modelo com variáveis contínuas e inteiras ao mesmo tempo.</td></tr>
+            <tr><td class="pt">ramificação e limitação</td><td class="en">branch-and-bound</td><td class="obs">Como o solver quebra o problema em subproblemas e poda os ruins.</td></tr>
+            <tr><td class="pt">plano de corte</td><td class="en">cutting plane</td><td class="obs">Restrição extra que corta soluções fracionárias sem perder as inteiras.</td></tr>
+            <tr><td class="pt">instância</td><td class="en">instance</td><td class="obs">Um conjunto concreto de dados para o modelo; o modelo é a forma, a instância é o recheio.</td></tr>
+            <tr><td class="pt">resolvedor</td><td class="en">solver</td><td class="obs">O programa que resolve: CBC, HiGHS, Gurobi, CPLEX.</td></tr>
+            <tr><td class="pt">metaheurística</td><td class="en">metaheuristic</td><td class="obs">Método que busca boas soluções rápido, sem provar que são ótimas.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="recursos">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-kicker">Biblioteca</div>
+        <h2>Tudo reunido, para consultar depois</h2>
+        <p>Os mesmos links das semanas, organizados por tipo, mais o que sobra para quando a trilha acabar.</p>
+      </div>
+      <div class="shelf">
+
+        <div class="shelfcard">
+          <h4>Videoaulas em português</h4>
+          <p>O que a trilha pede que você assista, reunido num lugar só.</p>
+          <ul class="res">
+            <li><span class="kind v">Curso</span><div><a href="https://www.youtube.com/playlist?list=PLH9knZH6lcgoWG6Q2zn3ilb3mFjJoyvTi" target="_blank" rel="noopener">UNIVESP: Pesquisa Operacional I</a><span>41 aulas: introdução, modelagem, problemas de transporte e aplicações.</span></div></li>
+            <li><span class="kind v">Curso</span><div><a href="https://www.youtube.com/playlist?list=PLxf-9FxNknCRB0ZsUhsFSYmvXFBbTBhtX" target="_blank" rel="noopener">Pesquisa Operacional: Programação Linear</a><span>Playlist alternativa, útil quando uma explicação não encaixa.</span></div></li>
+            <li><span class="kind v">Curso</span><div><a href="https://www.youtube.com/playlist?list=PLjK8TkmwOe0qqw7_8DhQPU6SNJ_OYXlLx" target="_blank" rel="noopener">PO para Engenharia de Produção</a><span>Enfoque aplicado, com muitos exemplos industriais.</span></div></li>
+            <li><span class="kind v">Aulas</span><div><a href="https://www.youtube.com/playlist?list=PLe82WKsecrpwg_R_KTZp6pIC1UylGPOYW" target="_blank" rel="noopener">Programação Linear: exercícios</a><span>Só resolução de exercícios, útil como banco de enunciados para modelar.</span></div></li>
+          </ul>
+        </div>
+
+        <div class="shelfcard">
+          <h4>Notas de aula e apostilas</h4>
+          <p>Leitura de apoio, sempre opcional. Material universitário aberto, em português.</p>
+          <ul class="res">
+            <li><span class="kind">UFPR</span><div><a href="https://alexandrechecoli.github.io/4-prog-linear/prog-linear.html" target="_blank" rel="noopener">Programação Linear: slides e listas com gabarito</a><span>Cobre modelagem, programação inteira e branch-and-bound, com listas resolvidas.</span></div></li>
+            <li><span class="kind">UNIFAL</span><div><a href="https://github.com/iagoac/dce692" target="_blank" rel="noopener">DCE692: Pesquisa Operacional</a><span>Slides, listas, laboratórios em Python-MIP e videoaulas; licença aberta.</span></div></li>
+            <li><span class="kind">UFOP</span><div><a href="http://www.decom.ufop.br/marcone/Disciplinas/OtimizacaoCombinatoria/OtimizacaoCombinatoria.pdf" target="_blank" rel="noopener">Otimização Combinatória: notas de aula</a><span>Referência nacional para modelagem inteira e problemas clássicos.</span></div></li>
+            <li><span class="kind">UNESP</span><div><a href="http://wwwp.fc.unesp.br/~adriana/Pos/PO1.pdf" target="_blank" rel="noopener">Otimização Linear</a><span>Notas completas de PL, com teoria bem organizada.</span></div></li>
+            <li><span class="kind">UFRJ</span><div><a href="https://pesc.coppe.ufrj.br/uploadfile/publicacao/3065.pdf" target="_blank" rel="noopener">Programação Linear, de Macambira &amp; Maculan</a><span>Texto da COPPE; leia depois de firmar o básico.</span></div></li>
+          </ul>
+        </div>
+
+        <div class="shelfcard">
+          <h4>Ferramentas</h4>
+          <p>O que instalar, o que usar no navegador.</p>
+          <ul class="res">
+            <li><span class="kind">Python</span><div><a href="https://coin-or.github.io/pulp/" target="_blank" rel="noopener">PuLP</a><span>Resolve tudo o que a trilha pede, contínuo e inteiro, com o CBC incluído.</span></div></li>
+            <li><span class="kind">Python</span><div><a href="https://python-mip.readthedocs.io/" target="_blank" rel="noopener">Python-MIP</a> · <a href="https://developers.google.com/optimization?hl=pt-br" target="_blank" rel="noopener">OR-Tools</a><span>Alternativas para depois: modelos grandes, controle fino do solver e roteamento.</span></div></li>
+            <li><span class="kind">Web</span><div><a href="https://www.phpsimplex.com/pt/" target="_blank" rel="noopener">PHPSimplex</a> · <a href="https://www.geogebra.org/calculator" target="_blank" rel="noopener">GeoGebra</a><span>Visualizar a região viável e conferir soluções sem escrever código.</span></div></li>
+            <li><span class="kind">Web</span><div><a href="https://colab.research.google.com" target="_blank" rel="noopener">Google Colab</a><span>Ambiente pronto, sem instalação, com tudo que a trilha precisa.</span></div></li>
+            <li><span class="kind">Licença</span><div><a href="https://www.gurobi.com/academia/academic-program-and-licenses/" target="_blank" rel="noopener">Gurobi: licença acadêmica gratuita</a><span>Peça com o e-mail institucional quando os modelos ficarem grandes.</span></div></li>
+          </ul>
+        </div>
+
+        <div class="shelfcard">
+          <h4>Artigos, instâncias e comunidade</h4>
+          <p>Onde a pesquisa brasileira da área acontece.</p>
+          <ul class="res">
+            <li><span class="kind">Revista</span><div><a href="https://www.scielo.br/j/pope/" target="_blank" rel="noopener">Pesquisa Operacional (SciELO)</a><span>Acesso aberto; boa fonte de artigos aplicados para o resumo da Semana 4.</span></div></li>
+            <li><span class="kind">Revista</span><div><a href="https://www.podesenvolvimento.org.br/" target="_blank" rel="noopener">PO para o Desenvolvimento</a><span>Aplicações a problemas públicos e regionais, em português.</span></div></li>
+            <li><span class="kind">Evento</span><div><a href="https://www.sobrapo.org.br/" target="_blank" rel="noopener">SOBRAPO / SBPO</a><span>Simpósio anual: o evento para onde a sua IC pode virar um artigo.</span></div></li>
+            <li><span class="kind">Dados</span><div><a href="https://www.brunel.ac.uk/~mastjjb/jeb/info.html" target="_blank" rel="noopener">OR-Library</a> · <a href="https://miplib.zib.de/" target="_blank" rel="noopener">MIPLIB</a><span>Instâncias de teste com resultados conhecidos.</span></div></li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="depois" style="border-bottom:none">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="sec-kicker">E depois?</div>
+        <h2>Quando a quarta semana acabar</h2>
+        <p>O passo imediato é um só, e é combinado na reunião: escolher com o orientador um artigo para
+          estudar a fundo. É esse artigo que define para onde a sua IC caminha. As outras portas abrem
+          depois, conforme o problema escolhido pedir.</p>
+      </div>
+      <div class="after">
+        <div class="next">
+          <h4>Próximo passo: escolher um artigo com o orientador</h4>
+          <p>Um artigo aplicado, de preferência em português e de acesso aberto, próximo de um dos clássicos
+            da Semana 4. Boas fontes: a <a href="https://www.scielo.br/j/pope/" target="_blank" rel="noopener">Revista
+            Pesquisa Operacional</a>, a <a href="https://www.podesenvolvimento.org.br/" target="_blank" rel="noopener">PO
+            para o Desenvolvimento</a> e os anais do <a href="https://www.sobrapo.org.br/" target="_blank" rel="noopener">SBPO</a>.
+            Leia em três passadas: <b>(1)</b> título, resumo, conclusão e figuras, para saber do que se
+            trata; <b>(2)</b> introdução, definição do problema e resultados, para entender o que foi feito;
+            <b>(3)</b> a formulação, com papel e caneta, para tentar reescrevê-la com a sua notação. Leve
+            para a reunião seguinte um resumo estruturado: problema, modelo, método, instâncias, resultados
+            e o que ficou em aberto.</p>
+        </div>
+        <div>
+          <h4>Metaheurísticas</h4>
+          <p>Quando a instância cresce e o solver exato não fecha: GRASP, VNS, busca tabu, BRKGA e, para
+            múltiplos objetivos, NSGA-II. As notas da UFOP são o começo natural.</p>
+        </div>
+        <div>
+          <h4>Decomposição</h4>
+          <p>Modelos grandes se quebram: relaxação lagrangiana, geração de colunas e decomposição de Benders.
+            Passa antes por dualidade e preços-sombra, que ficam para depois desta trilha.</p>
+        </div>
+        <div>
+          <h4>Solvers profissionais</h4>
+          <p>Gurobi e CPLEX com licença acadêmica, callbacks, cortes definidos pelo usuário e ajuste fino de
+            parâmetros. É o que separa um protótipo de um experimento publicável.</p>
+        </div>
+        <div>
+          <h4>Escrita científica</h4>
+          <p>LaTeX, tabelas de resultados que se defendem sozinhas, revisão de literatura e submissão ao SBPO.
+            Comece cedo: escrever é parte de pesquisar, não o passo final.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Trilha de entrada em Pesquisa Operacional. Laboratório MODAL, Departamento de Computação, UFMA (São Luís).</p>
+    <p>Material de apoio para alunos de iniciação científica. Todos os recursos indicados são de acesso livre.</p>
+    <p class="biblio"><b>Livros de referência</b>
+      Hillier &amp; Lieberman, <em>Introdução à Pesquisa Operacional</em> · Arenales, Armentano, Morabito &amp;
+      Yanasse, <em>Pesquisa Operacional</em> · Goldbarg &amp; Luna, <em>Otimização Combinatória e Programação
+      Linear</em> · Winston, <em>Operations Research: Applications and Algorithms</em>.</p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var boxes = Array.prototype.slice.call(document.querySelectorAll('.tasks input[type="checkbox"]'));
+    var fill = document.getElementById('progFill');
+    var num = document.getElementById('progNum');
+
+    function read(key) {
+      try { return window.localStorage.getItem(key); } catch (e) { return null; }
+    }
+    function save(key, val) {
+      try { window.localStorage.setItem(key, val); } catch (e) { /* modo privado: segue sem salvar */ }
+    }
+    function render() {
+      var done = boxes.filter(function (b) { return b.checked; }).length;
+      var pct = boxes.length ? Math.round((done / boxes.length) * 100) : 0;
+      fill.style.width = pct + '%';
+      num.textContent = done + '/' + boxes.length;
+    }
+
+    boxes.forEach(function (b) {
+      if (read('modal-po:' + b.id) === '1') { b.checked = true; }
+      b.addEventListener('change', function () {
+        save('modal-po:' + b.id, b.checked ? '1' : '0');
+        render();
+      });
+    });
+    render();
+  })();
+</script>
+</body>
+</html>
